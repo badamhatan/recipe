@@ -2,6 +2,7 @@ require("@babel/polyfill");
 import Search from "./model/Search";
 import { elements, renderLoader, clearLoader} from "./view/base";
 import * as searchView from "./view/searchView"
+import Recipe from "./model/recipe";
 /*
 *Web app төлөв
 *Хайлтын query, үр дүн
@@ -26,15 +27,24 @@ const controlSearch = async () => {
             await state.search.doSearch();
             // 5. Хайлтын үр дүнг дэлгэцэнд үзүүлнэ.
             clearLoader();
-            if(state.search.result===undefined) alert("Хайсан хоолны жор олдсонгүй")
-            searchView.renderRecipes(state.search.result);
-
-      }
-      
+            if (state.search.result === undefined) alert("Хайсан хоолны жор олдсонгүй");
+            else searchView.renderRecipes(state.search.result);
+      };      
       
 }
 elements.searchForm.addEventListener("submit", e => {
       e.preventDefault();
-      controlSearch();
-      
+      controlSearch();      
 })
+
+elements.pageButtons.addEventListener("click", e => {
+      const btn = e.target.closest(".btn-inline");
+      if (btn) {
+            const gotoPageNumber = parseInt(btn.dataset.goto);
+            searchView.clearSearchResult();
+            searchView.renderRecipes(state.search.result, gotoPageNumber);
+      }
+});
+
+const r = new Recipe(47746);
+r.getRecipe();
